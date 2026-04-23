@@ -8,9 +8,9 @@ export default async function Dashboard() {
   const session = await auth()
   if (!session?.user?.id) return redirect("/")
 
-  const authenticators = await prisma.authenticator.findMany({
+  const authenticators = (await prisma.authenticator.findMany({
     where: { userId: session.user.id }
-  })
+  })).map(auth => ({ ...auth, transports: auth.transports ?? undefined }))
 
   const auditLogs = await prisma.auditLog.findMany({
     where: { userId: session.user.id },
