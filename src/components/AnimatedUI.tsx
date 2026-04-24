@@ -48,7 +48,7 @@ export function AnimatedInput({ ...props }: React.InputHTMLAttributes<HTMLInputE
     <motion.input
       whileFocus={{ scale: 1.01, borderColor: "#ffffff" }}
       className="w-full px-4 py-3 bg-black text-white border border-border rounded focus:outline-none focus:ring-1 focus:ring-white transition-all placeholder:text-muted-foreground"
-      {...props}
+      {...(props as any)}
     />
   )
 }
