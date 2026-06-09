@@ -14,8 +14,10 @@ services:
         sync: false
       - key: AUTH_URL
         sync: false
-      - key: EMAIL_SERVER_USER
+      - key: RESEND_API_KEY
         sync: false
+      - key: EMAIL_SERVER_USER
+        value: "resend"
       - key: EMAIL_SERVER_PASSWORD
         sync: false
       - key: EMAIL_SERVER_HOST
@@ -23,4 +25,5 @@ services:
       - key: EMAIL_SERVER_PORT
         value: "465"
       - key: EMAIL_FROM
-        sync: false
+        value: "onboarding@resend.dev"
+

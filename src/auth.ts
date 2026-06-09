@@ -30,19 +30,69 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
   providers: [
     Nodemailer({
+      // Server config kept as fallback identifier — actual sending is via HTTP API below
       server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: Number(process.env.EMAIL_SERVER_PORT),
-        secure: Number(process.env.EMAIL_SERVER_PORT) === 465,
+        host: process.env.EMAIL_SERVER_HOST || "smtp.resend.com",
+        port: Number(process.env.EMAIL_SERVER_PORT) || 465,
+        secure: true,
         auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
-        },
-        tls: {
-          rejectUnauthorized: true,
+          user: process.env.EMAIL_SERVER_USER || "resend",
+          pass: process.env.RESEND_API_KEY || process.env.EMAIL_SERVER_PASSWORD || "",
         },
       },
-      from: process.env.EMAIL_FROM
+      from: process.env.EMAIL_FROM || "onboarding@resend.dev",
+      // Bypass SMTP — send via Resend HTTP API directly
+      async sendVerificationRequest({ identifier: email, url, provider }) {
+        const apiKey = process.env.RESEND_API_KEY || process.env.EMAIL_SERVER_PASSWORD
+        if (!apiKey) {
+          console.error("[AUTH EMAIL] No API key found in RESEND_API_KEY or EMAIL_SERVER_PASSWORD")
+          throw new Error("Email service not configured: missing API key")
+        }
+
+        const fromAddress = provider.from || "onboarding@resend.dev"
+        console.log(`[AUTH EMAIL] Sending magic link to ${email} from ${fromAddress}`)
+
+        const res = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            from: fromAddress,
+            to: [email],
+            subject: "Sign in to SecureAuth Portal",
+            html: `
+              <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 20px;">
+                <div style="text-align: center; margin-bottom: 32px;">
+                  <h1 style="font-size: 24px; font-weight: 700; color: #111; margin: 0;">SecureAuth Portal</h1>
+                  <p style="color: #666; font-size: 14px; margin-top: 8px;">Premium minimalist secure authentication</p>
+                </div>
+                <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 32px; text-align: center;">
+                  <p style="color: #374151; font-size: 15px; line-height: 1.6; margin: 0 0 24px 0;">
+                    Click the button below to securely sign in to your account. This link expires in 24 hours.
+                  </p>
+                  <a href="${url}" style="display: inline-block; background: #6366f1; color: white; font-weight: 600; font-size: 14px; padding: 12px 32px; border-radius: 8px; text-decoration: none;">
+                    Sign in to SecureAuth
+                  </a>
+                </div>
+                <p style="color: #9ca3af; font-size: 12px; text-align: center; margin-top: 24px;">
+                  If you didn't request this email, you can safely ignore it.
+                </p>
+              </div>
+            `,
+          }),
+        })
+
+        if (!res.ok) {
+          const errorBody = await res.text()
+          console.error(`[AUTH EMAIL] Resend API error (${res.status}): ${errorBody}`)
+          throw new Error(`Failed to send verification email: ${errorBody}`)
+        }
+
+        const result = await res.json()
+        console.log(`[AUTH EMAIL] Email sent successfully. Resend ID: ${result.id}`)
+      },
     }),
     WebAuthn,
   ],
