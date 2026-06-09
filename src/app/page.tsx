@@ -4,6 +4,7 @@ import { useState } from "react"
 import Header from "@/components/Header"
 import Hero from "@/components/Hero"
 import FeatureGrid from "@/components/FeatureGrid"
+import HowItWorks from "@/components/HowItWorks"
 import AuthModal from "@/components/AuthModal"
 
 export default function Home() {
@@ -18,6 +19,9 @@ export default function Home() {
       <main className="flex-grow flex flex-col">
         {/* Hero Illustration & Info Panel */}
         <Hero onAuthClick={() => setIsAuthModalOpen(true)} />
+
+        {/* How It Works Flow Section */}
+        <HowItWorks />
 
         {/* Modular Feature Grid & Footer Info */}
         <FeatureGrid />

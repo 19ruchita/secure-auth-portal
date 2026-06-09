@@ -27,7 +27,12 @@ export default function Header({ onAuthClick }: HeaderProps) {
           >
             Features
           </button>
-          <span className="hover:text-black cursor-pointer transition-colors">How it works</span>
+          <button 
+            onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+            className="hover:text-black cursor-pointer transition-colors font-medium border-none bg-transparent p-0"
+          >
+            How it works
+          </button>
         </nav>
 
         {/* Action Buttons */}
