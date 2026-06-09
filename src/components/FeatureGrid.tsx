@@ -2,11 +2,7 @@
 
 import { motion } from "framer-motion"
 
-interface FeatureGridProps {
-  onCardClick?: () => void
-}
-
-export default function FeatureGrid({ onCardClick }: FeatureGridProps) {
+export default function FeatureGrid() {
   const features = [
     {
       icon: (
@@ -47,32 +43,24 @@ export default function FeatureGrid({ onCardClick }: FeatureGridProps) {
   ]
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-6 py-16">
+    <section id="features" className="w-full max-w-7xl mx-auto px-6 py-16 scroll-mt-20">
       
       {/* 4-Card Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {features.map((feature, index) => (
           <div 
             key={index} 
-            onClick={onCardClick}
-            className="group cursor-pointer bg-white border border-neutral-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:border-neutral-200 rounded-2xl p-8 flex flex-col justify-between transition-all duration-300"
+            className="bg-white border border-neutral-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] rounded-2xl p-8 flex flex-col justify-between transition-all duration-300"
           >
             <div className="text-left">
               {/* Icon Container */}
-              <div className="w-12 h-12 rounded-xl bg-neutral-50 border border-neutral-100 flex items-center justify-center text-neutral-900 group-hover:bg-black group-hover:text-white transition-all duration-300 mb-6">
+              <div className="w-12 h-12 rounded-xl bg-neutral-50 border border-neutral-100 flex items-center justify-center text-neutral-900 mb-6">
                 {feature.icon}
               </div>
 
               {/* Title & Desc */}
               <h3 className="text-lg font-bold text-neutral-900 mb-2.5">{feature.title}</h3>
               <p className="text-sm text-neutral-500 leading-relaxed font-normal">{feature.description}</p>
-            </div>
-
-            {/* Bottom Arrow Circle */}
-            <div className="w-8 h-8 rounded-full border border-neutral-100 flex items-center justify-center text-neutral-400 group-hover:border-neutral-900 group-hover:text-black group-hover:bg-neutral-50 ml-auto mt-8 transition-all duration-300">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
             </div>
           </div>
         ))}

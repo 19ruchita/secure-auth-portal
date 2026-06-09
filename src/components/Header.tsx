@@ -21,16 +21,13 @@ export default function Header({ onAuthClick }: HeaderProps) {
 
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-neutral-600">
-          <div className="flex items-center gap-1 hover:text-black cursor-pointer transition-colors group">
-            <span>Features</span>
-            <svg className="w-4 h-4 text-neutral-400 group-hover:text-black transition-colors" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
+          <button 
+            onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+            className="hover:text-black cursor-pointer transition-colors font-medium border-none bg-transparent p-0"
+          >
+            Features
+          </button>
           <span className="hover:text-black cursor-pointer transition-colors">How it works</span>
-          <span className="hover:text-black cursor-pointer transition-colors">Security</span>
-          <span className="hover:text-black cursor-pointer transition-colors">Tech Stack</span>
-          <span className="hover:text-black cursor-pointer transition-colors">Docs</span>
         </nav>
 
         {/* Action Buttons */}

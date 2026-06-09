@@ -20,7 +20,7 @@ export default function Home() {
         <Hero onAuthClick={() => setIsAuthModalOpen(true)} />
 
         {/* Modular Feature Grid & Footer Info */}
-        <FeatureGrid onCardClick={() => setIsAuthModalOpen(true)} />
+        <FeatureGrid />
       </main>
 
       {/* Footer copyright */}
