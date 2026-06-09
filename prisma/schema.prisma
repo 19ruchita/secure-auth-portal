@@ -24,6 +24,7 @@ model User {
 
   role      Role      @default(USER)
   auditLogs AuditLog[]
+  vaultAssets VaultAsset[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -93,3 +94,14 @@ model AuditLog {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model VaultAsset {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title        String   // e.g., "Passport Copy", "Delhi-Prayagraj Rail Ticket"
+  assetType    String   // "DOCUMENT" | "FINANCIAL" | "CREDENTIAL"
+  secureUrl    String   // Encrypted file/string location mapping
+  createdAt    DateTime @default(now())
+}
+
